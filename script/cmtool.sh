@@ -82,6 +82,20 @@ install_puppet()
     rm -f ${DEB_NAME}
 }
 
+install_docker()
+{
+    echo "==> Installing Docker"
+   export DEBIAN_FRONTEND=noninteractive
+    # fetch backports so that an upgraded kernel supporting aufs can be installed
+    echo "deb http://http.debian.net/debian wheezy-backports main" > /etc/apt/sources.list.d/backports.list
+    apt-get -q update
+    echo "q\n" > apt-get install -t wheezy-backports linux-image-amd64
+    curl -sSL https://get.docker.io/ | sh
+    echo "NOTE: enabling remote api, and using external dns. your docker daemon will be reachable on the network"
+    sed -i.bak "/DOCKER_OPTS=.*/c\DOCKER_OPTS=\" --dns 8.8.8.8 --dns 8.8.4.4 -H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock\"" /etc/default/docker
+    sudo service docker restart
+}
+
 #
 # Main script
 #
@@ -101,6 +115,10 @@ case "${CM}" in
 
   'puppet')
     install_puppet
+    ;;
+
+  'docker')
+    install_docker
     ;;
 
   *)
