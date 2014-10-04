@@ -92,6 +92,7 @@ Possible values for the CM variable are:
 * `chef` - Install Chef
 * `puppet` - Install Puppet
 * `salt`  - Install Salt
+* `docker` - Install Docker, configured to listen on network
 
 You can also specify a variable `CM_VERSION`, if supported by the
 configuration management tool, to override the default of `latest`.
